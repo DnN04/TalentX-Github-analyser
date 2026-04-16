@@ -39,7 +39,7 @@ export default function App() {
         await new Promise((r) => setTimeout(r, 900))
         data = getMockData(name)
       } else {
-        const res = await fetch('http://10.9.104.155:8000/analyze', {
+        const res = await fetch('http://localhost:8000/analyze', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ username: name }),
@@ -114,7 +114,7 @@ export default function App() {
             <div className={styles.sectionDivider}><span className={styles.sectionLabel}>Overview</span></div>
             <div className={styles.topGrid}>
               <ScoreCard score={result.data.talent_score} />
-              <SkillCard username={result.username} skillLevel={result.data.skill_level} meta={result.data._meta ?? {}} />
+              <SkillCard username={result.username} skillLevel={result.data.skill_level} meta={result.data._meta ?? result.data.raw_metrics ?? {}} />
             </div>
 
             <div className={styles.sectionDivider}><span className={styles.sectionLabel}>Achievements</span></div>

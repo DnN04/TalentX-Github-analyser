@@ -6,7 +6,7 @@ import os
 import joblib
 import numpy as np
 from score_calculator import calculate_score, get_skill_level, get_strengths
-from explainer import generate_explanation
+from app.xai.explainer import explain_as_strings  # ✅ ONLY THIS
 
 app = FastAPI(title="GitHub Talent Analyzer API", version="1.0.0")
 
@@ -19,9 +19,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-GITHUB_TOKEN = os.getenv("GITHUB_TOKEN", "")  # Set via environment variable
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN", "")
 
-# Load ML model if available, else use rule-based fallback
+# Load ML model
 try:
     model = joblib.load("trained_model.pkl")
     MODEL_AVAILABLE = True
@@ -29,7 +29,7 @@ try:
 except FileNotFoundError:
     model = None
     MODEL_AVAILABLE = False
-    print("⚠️  trained_model.pkl not found — using rule-based skill level")
+    print("⚠️ trained_model.pkl not found — using rule-based skill level")
 
 
 class AnalyzeRequest(BaseModel):
@@ -44,16 +44,14 @@ def get_github_headers():
 
 
 def fetch_github_data(username: str) -> dict:
-    """Fetch commits, repos, stars, languages from GitHub API."""
     headers = get_github_headers()
     base = "https://api.github.com"
 
-    # 1. User profile
     user_resp = requests.get(f"{base}/users/{username}", headers=headers)
     if user_resp.status_code == 404:
         raise HTTPException(status_code=404, detail=f"GitHub user '{username}' not found.")
     if user_resp.status_code == 403:
-        raise HTTPException(status_code=429, detail="GitHub API rate limit hit. Add a GITHUB_TOKEN.")
+        raise HTTPException(status_code=429, detail="GitHub API rate limit hit.")
     if user_resp.status_code != 200:
         raise HTTPException(status_code=502, detail="Failed to fetch GitHub user data.")
 
@@ -61,22 +59,16 @@ def fetch_github_data(username: str) -> dict:
     public_repos = user_data.get("public_repos", 0)
     followers = user_data.get("followers", 0)
 
-    # 2. Repositories (up to 100)
     repos_resp = requests.get(
         f"{base}/users/{username}/repos",
         headers=headers,
-        params={"per_page": 100, "sort": "updated"}
+        params={"per_page": 100}
     )
     repos = repos_resp.json() if repos_resp.status_code == 200 else []
 
-    # Aggregate stars and languages
     total_stars = sum(r.get("stargazers_count", 0) for r in repos)
-    languages = set()
-    for r in repos:
-        if r.get("language"):
-            languages.add(r["language"])
+    languages = {r["language"] for r in repos if r.get("language")}
 
-    # Language breakdown (top 5 by repo count)
     lang_count = {}
     for r in repos:
         lang = r.get("language")
@@ -84,7 +76,6 @@ def fetch_github_data(username: str) -> dict:
             lang_count[lang] = lang_count.get(lang, 0) + 1
     top_languages = sorted(lang_count, key=lang_count.get, reverse=True)[:5]
 
-    # 3. Commit count (approximate via events)
     events_resp = requests.get(
         f"{base}/users/{username}/events/public",
         headers=headers,
@@ -93,10 +84,9 @@ def fetch_github_data(username: str) -> dict:
     events = events_resp.json() if events_resp.status_code == 200 else []
     commit_count = sum(
         len(e.get("payload", {}).get("commits", []))
-        for e in events
-        if e.get("type") == "PushEvent"
+        for e in events if e.get("type") == "PushEvent"
     )
-    # Fallback: use followers as a soft proxy if no event data
+
     if commit_count == 0:
         commit_count = min(followers * 2, 500)
 
@@ -116,12 +106,7 @@ def fetch_github_data(username: str) -> dict:
 
 @app.get("/")
 def root():
-    return {"message": "GitHub Talent Analyzer API is running 🚀", "version": "1.0.0"}
-
-
-@app.get("/health")
-def health():
-    return {"status": "ok", "model_loaded": MODEL_AVAILABLE}
+    return {"message": "GitHub Talent Analyzer API is running 🚀"}
 
 
 @app.post("/analyze")
@@ -130,7 +115,6 @@ def analyze(request: AnalyzeRequest):
     if not username:
         raise HTTPException(status_code=400, detail="Username cannot be empty.")
 
-    # Step 1: Fetch GitHub data
     github_data = fetch_github_data(username)
 
     commits = github_data["commits"]
@@ -138,27 +122,29 @@ def analyze(request: AnalyzeRequest):
     stars = github_data["stars"]
     languages_count = github_data["languages_count"]
 
-    # Step 2: Talent score
+    # Talent score
     talent_score = calculate_score(commits, repos, stars, languages_count)
 
-    # Step 3: Skill level (ML model or rule-based)
+    # Skill level
     if MODEL_AVAILABLE and model is not None:
         features = np.array([[commits, repos, stars, languages_count]])
         skill_level = model.predict(features)[0]
     else:
         skill_level = get_skill_level(talent_score)
 
-    # Step 4: Feature contributions for chart
+    # Feature contributions (for chart)
     feature_contributions = {
         "commits": round(0.3 * min(commits / 500, 1) * 100, 1),
-        "repos":   round(0.2 * min(repos / 50, 1) * 100, 1),
-        "stars":   round(0.2 * min(stars / 100, 1) * 100, 1),
+        "repos": round(0.2 * min(repos / 50, 1) * 100, 1),
+        "stars": round(0.2 * min(stars / 100, 1) * 100, 1),
         "languages": round(0.3 * min(languages_count / 10, 1) * 100, 1),
     }
 
-    # Step 5: Strengths & explanation
+    # ✅ XAI EXPLANATION (YOUR PART)
+    features_array = [commits, repos, stars, languages_count]
+    explanations = explain_as_strings(features_array, model)
+
     strengths = get_strengths(commits, repos, stars, languages_count)
-    explanation = generate_explanation(commits, repos, stars, languages_count, talent_score)
 
     return {
         "username": username,
@@ -171,7 +157,7 @@ def analyze(request: AnalyzeRequest):
         "top_languages": github_data["top_languages"],
         "strengths": strengths,
         "feature_contributions": feature_contributions,
-        "explanation": explanation,
+        "explanation": explanations,  # ✅ replaced
         "raw_metrics": {
             "commits": commits,
             "repos": repos,
