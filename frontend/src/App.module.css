@@ -1,0 +1,289 @@
+.page {
+  min-height: 100vh;
+  padding: 0 0 4rem;
+}
+
+/* ── Top nav bar ── */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  height: 56px;
+  background: rgba(5, 13, 26, 0.85);
+  border-bottom: 1px solid var(--ft-navy-border);
+  backdrop-filter: blur(8px);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.navBrand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navLogo {
+  width: 28px;
+  height: 28px;
+  color: var(--ft-teal);
+}
+
+.navTitle {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ft-white);
+}
+
+.navSub {
+  font-size: 11px;
+  color: var(--ft-teal);
+  letter-spacing: 0.05em;
+}
+
+.navTag {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ft-teal);
+  border: 1px solid var(--ft-navy-border);
+  padding: 3px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--ft-teal-dim);
+}
+
+/* ── Main container ── */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+/* ── Hero search section ── */
+.hero {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  padding: 2rem 0 1.5rem;
+}
+
+.heroEyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ft-teal);
+  margin-bottom: 10px;
+}
+
+.heroTitle {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--ft-white);
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+
+.heroTitle span {
+  color: var(--ft-teal);
+}
+
+.heroSub {
+  font-size: 14px;
+  color: var(--ft-white-muted);
+  max-width: 440px;
+  margin: 0 auto 1.5rem;
+}
+
+/* ── Search row ── */
+.searchRow {
+  display: flex;
+  gap: 8px;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.inputWrap {
+  position: relative;
+  flex: 1;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ft-teal);
+  display: flex;
+  pointer-events: none;
+}
+
+.input {
+  width: 100%;
+  height: 42px;
+  padding: 0 14px 0 38px;
+  background: var(--ft-navy-card);
+  border: 1px solid var(--ft-navy-border);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  color: var(--ft-white);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  letter-spacing: 0.01em;
+}
+
+.input::placeholder { color: var(--ft-white-faint); }
+.input:focus {
+  border-color: var(--ft-teal);
+  box-shadow: 0 0 0 3px var(--ft-teal-glow);
+}
+.input:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.analyzeBtn {
+  height: 42px;
+  padding: 0 22px;
+  background: var(--ft-teal);
+  color: var(--ft-navy-deep);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, opacity 0.15s, transform 0.1s;
+}
+
+.analyzeBtn:hover:not(:disabled) { background: #00daf5; }
+.analyzeBtn:active:not(:disabled) { transform: scale(0.98); }
+.analyzeBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Mock toggle ── */
+.mockToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--ft-white-faint);
+  cursor: pointer;
+  margin-top: 12px;
+  user-select: none;
+}
+.mockToggle input { accent-color: var(--ft-teal); cursor: pointer; }
+.mockHint { color: var(--ft-white-faint); }
+
+/* ── Divider label ── */
+.sectionDivider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.25rem;
+}
+.sectionDivider::before,
+.sectionDivider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--ft-navy-border);
+}
+.sectionLabel {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ft-teal);
+  white-space: nowrap;
+}
+
+/* ── Error ── */
+.errorBox {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: rgba(232, 93, 93, 0.1);
+  border: 1px solid rgba(232, 93, 93, 0.3);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  font-size: 13px;
+  color: #f87171;
+  margin-bottom: 1.5rem;
+}
+.errorBox svg { flex-shrink: 0; margin-top: 1px; }
+
+/* ── Spinner ── */
+.spinnerWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 3.5rem;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--ft-navy-border);
+  border-top-color: var(--ft-teal);
+  border-radius: 50%;
+  animation: spin 0.65s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.spinnerText {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ft-white-faint);
+}
+
+/* ── Results layout ── */
+.topGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.chartRow { margin-bottom: 12px; }
+
+.bottomGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.badgesRow { margin-bottom: 12px; }
+
+@media (max-width: 580px) {
+  .topGrid, .bottomGrid { grid-template-columns: 1fr; }
+  .heroTitle { font-size: 22px; }
+}
+
+/* ── Placeholder ── */
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 4rem 1rem;
+  color: var(--ft-white-faint);
+  text-align: center;
+}
+.placeholder svg { opacity: 0.2; }
+.placeholder p { font-size: 14px; color: var(--ft-white-muted); }
+.placeholderHint { font-size: 12px !important; color: var(--ft-white-faint) !important; }
+.placeholderHint code {
+  background: var(--ft-navy-card);
+  border: 1px solid var(--ft-navy-border);
+  border-radius: var(--radius-sm);
+  padding: 1px 6px;
+  font-family: ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--ft-teal);
+}

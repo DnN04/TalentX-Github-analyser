@@ -1,0 +1,52 @@
+:root {
+  --score-red: #f85149;
+  --score-yellow: #d29922;
+  --score-green: #3fb950;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 1.5rem 1.25rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.number {
+  font-size: 60px;
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.sub {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.barTrack {
+  width: 80%;
+  height: 6px;
+  background: var(--color-bg-tertiary);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+
+.barFill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+}

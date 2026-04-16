@@ -1,0 +1,109 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 1.25rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.initials {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.info {
+  min-width: 0;
+}
+
+.username {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.url {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.beginner  { background: #ddf4ff; color: #0550ae; }
+.intermediate { background: #fff8c5; color: #7d4e00; }
+.advanced  { background: #dafbe1; color: #116329; }
+.expert    { background: #fbefff; color: #6e40c9; }
+
+@media (prefers-color-scheme: dark) {
+  .beginner  { background: #0c2d6b; color: #79c0ff; }
+  .intermediate { background: #3d2300; color: #e3b341; }
+  .advanced  { background: #0d2e1a; color: #56d364; }
+  .expert    { background: #2d1c53; color: #d2a8ff; }
+}
+
+.statsRow {
+  display: flex;
+  gap: 8px;
+}
+
+.stat {
+  flex: 1;
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-md);
+  padding: 8px 10px;
+  text-align: center;
+}
+
+.statValue {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.statLabel {
+  display: block;
+  font-size: 11px;
+  color: var(--color-text-muted);
+  margin-top: 1px;
+}
